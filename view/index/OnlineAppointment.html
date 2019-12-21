@@ -1,0 +1,105 @@
+<?php
+		$seversName=$mysqli->query("select * from service order by sort desc")->fetch_all(MYSQLI_ASSOC);
+
+?>
+	
+		<link rel="stylesheet" type="text/css" href="../static/index/css/online.css" />
+		<link rel="stylesheet" href="../static/layui/css/layui.css">
+	<body>
+		<!--导航-->
+		<!--内容-->
+		<div class="con_fa_nk">
+			<div class="tp">
+				<img src="../static/index/img/banner.jpg" />
+			</div>
+			<div class="biaoti1">
+				<span class="us1">在线预约</span>
+				<span class="us2">Online Appointment</span>
+			</div>
+			<form class="layui-form" id="OnlineApp" action="">
+				<div class="layui-form-item">
+					<label class="layui-form-label">服务项目</label>
+					<div class="layui-input-block">
+						<select name="sid" lay-verify="required">
+							<?php foreach($seversName as $v) { ?>
+								<option value="<?php echo $v['sid'] ?>"><?php echo $v['sname']?></option>
+							<?php } ?>
+						</select>
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<label class="layui-form-label">请选择日期</label>
+					<div class="layui-input-inline">
+						<input type="text" name="date" required lay-verify="required" class="layui-input" id="test1">
+					</div>
+				</div>
+
+				<div class="layui-form-item">
+					<label class="layui-form-label">请输入姓名</label>
+					<div class="layui-input-block">
+						<input type="text" name="name" required  lay-verify="required" autocomplete="off" placeholder="请输姓名" class="layui-input">
+					</div>
+				</div>
+
+				<div class="layui-form-item">
+					<label class="layui-form-label">请选择性别</label>
+					<div class="layui-input-block">
+						<input type="radio" name="sex" value="1" title="男" checked>
+						<input type="radio" name="sex" value="0" title="女">
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<label class="layui-form-label">请输入电话</label>
+					<div class="layui-input-block">
+						<input type="text" name="tel" required   lay-verify="required" autocomplete="off" placeholder="请输入电话" class="layui-input">
+					</div>
+				</div>
+				<div class="layui-form-item layui-form-text">
+					<label class="layui-form-label">补充说明</label>
+					<div class="layui-input-block">
+						<textarea name="note" placeholder="请输入内容" required lay-verify="required" class="layui-textarea"></textarea>
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<div class="layui-input-block">
+						<button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+						<button type="reset" class="layui-btn layui-btn-primary">重置</button>
+					</div>
+				</div>
+			</form>
+	</div>
+		<script src="../static/index/js/jquery-2.1.0.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../static/layui/layui.js"></script>
+		<script src="../static/index/js/public.js" type="text/javascript" charset="utf-8"></script>
+		<script>
+			layui.use(['form','jquery','laydate'] ,function(){
+				// var form = layui.form;
+				// var laydate = layui.laydate;
+				var {form,$,laydate}=layui;
+				laydate.render({
+					elem: '#test1' //指定元素
+				});
+				//监听提交
+				form.on('submit(formDemo)', function(data){
+					let formdata=data.field;
+					// console.log(formdata);
+					$.ajax({
+						type:'post',
+						url:"OnlineAppointment.php",
+						data:formdata,
+						dataType:"json",
+						success:function (res) {
+							layer.msg(res.msg,{icon:1});
+							document.getElementById("OnlineApp").reset();
+						}
+					})
+					return false;
+				});
+			});
+
+
+		</script>
+		
+	</body>
+
+</html>
